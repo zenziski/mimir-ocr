@@ -1,4 +1,4 @@
-# Nome do Projeto
+# MIMIR OCR
 
 Este é um guia rápido para começar a trabalhar neste projeto.
 

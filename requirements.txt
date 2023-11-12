@@ -1,0 +1,7 @@
+pdfminer.six
+pdf2image
+Pillow
+pytesseract
+flask
+requests
+flask-cors

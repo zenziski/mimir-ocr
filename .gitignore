@@ -1,0 +1,3 @@
+*.yml
+.git/
+__pycache__/

@@ -61,12 +61,12 @@ def main(path):
         elif (file.name.endswith('.jpg') or file.name.endswith('.png')): #é uma imagem
             text = pytesseract.image_to_string(Image.open(inputFilepath), lang="por")
         
-        data = getData(text, file.name)
+        data = getData(text)
         returnData.append({"filename": file.name, "cnpj": data[0], "cpf": data[1], "rg": data[2], "date": data[3]})
     return returnData
 
 #Função que retorna os dados extraidos conforme arquivo de regex
-def getData(text, filename):
+def getData(text):
     print(text, flush=True)
     f = open('regex.json')
     regexes = json.load(f)

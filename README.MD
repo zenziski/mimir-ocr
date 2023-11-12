@@ -27,7 +27,7 @@ services:
       - "80:5000"
     expose:
       - "5000"
-    command: python3 server.py
+    command: "gunicorn -w 4 -b 0.0.0.0:5000 server:app"
 ```
 
 4. Execute o comando `docker-compose build`. Este comando constrói os serviços do projeto.

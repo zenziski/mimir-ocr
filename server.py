@@ -2,9 +2,8 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 import os
 import readFiles
-import requests
+#import requests
 import random
-import json
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -42,4 +41,4 @@ def get():
     return jsonify({'hello': 'world'})
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
+    app.run(host="0.0.0.0")

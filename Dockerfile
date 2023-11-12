@@ -9,9 +9,9 @@ RUN apt-get install tesseract-ocr -y
 RUN apt-get install tesseract-ocr-por -y
 
 COPY requirements.txt ./
-RUN pip3 install numpy opencv-python-headless
+RUN pip3 install numpy opencv-python-headless gunicorn
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD [ "python3", "./server.py" ]
+CMD [ "gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "server:app" ]

@@ -8,37 +8,47 @@ import json
 import cv2
 import numpy as np
 
-def preprocess_image(image_path):
-    img = cv2.imread(image_path)
+def preprocess_image(imagePath):
+    img = cv2.imread(imagePath)
+
     # converte para esquema de cores HSV
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
     # range de vermelho
-    lower_red = np.array([0, 70, 50])
-    upper_red = np.array([10, 255, 255])
+    lowerRed = np.array([0, 70, 50])
+    upperRed = np.array([10, 255, 255])
+
     # aplica a mascara para pegar somente partes vermelhas
-    mask_red = cv2.inRange(hsv, lower_red, upper_red)
+    maskRed = cv2.inRange(hsv, lowerRed, upperRed)
+
     # aplica bitwise para pegar somente partes vermelhas
-    red_only = cv2.bitwise_and(img, img, mask=mask_red)
+    redOnly = cv2.bitwise_and(img, img, mask=maskRed)
+
     # inverte a mascara para pegar outras partes que nao sao vermelhas
-    mask_non_red = cv2.bitwise_not(mask_red)
+    maskNonRed = cv2.bitwise_not(maskRed)
+
     # aplica bitwise para pegar somente partes que nao sao vermelhas
-    non_red_only = cv2.bitwise_and(img, img, mask=mask_non_red)
+    nonRedOnly = cv2.bitwise_and(img, img, mask=maskNonRed)
+
     # converte as duas imagens em escalas de cinza
-    gray_red = cv2.cvtColor(red_only, cv2.COLOR_BGR2GRAY)
-    gray_non_red = cv2.cvtColor(non_red_only, cv2.COLOR_BGR2GRAY)
+    grayRed = cv2.cvtColor(redOnly, cv2.COLOR_BGR2GRAY)
+    grayNonRed = cv2.cvtColor(nonRedOnly, cv2.COLOR_BGR2GRAY)
+
     # trata imagem para remover ruidos
     kernel = np.ones((1, 1), np.uint8)
-    img_red = cv2.dilate(gray_red, kernel, iterations=1)
-    img_red = cv2.erode(img_red, kernel, iterations=1)
-    img_non_red = cv2.dilate(gray_non_red, kernel, iterations=1)
-    img_non_red = cv2.erode(img_non_red, kernel, iterations=1)
-    # aplica threshold adaptativo para binarizar as imagens
-    img_red = cv2.adaptiveThreshold(img_red, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 2)
-    img_non_red = cv2.adaptiveThreshold(img_non_red, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 2)
-    # combinando as duas imagens
-    combined_img = cv2.bitwise_or(img_red, img_non_red)
+    imgRed = cv2.dilate(grayRed, kernel, iterations=1)
+    imgRed = cv2.erode(imgRed, kernel, iterations=1)
+    imgNonRed = cv2.dilate(grayNonRed, kernel, iterations=1)
+    imgNonRed = cv2.erode(imgNonRed, kernel, iterations=1)
 
-    cv2.imwrite(image_path, combined_img)
+    # aplica threshold adaptativo para binarizar as imagens
+    imgRed = cv2.adaptiveThreshold(imgRed, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 2)
+    imgNonRed = cv2.adaptiveThreshold(imgNonRed, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 2)
+    
+    # combinando as duas imagens
+    combinedImg = cv2.bitwise_or(imgRed, imgNonRed)
+
+    cv2.imwrite(imagePath, combinedImg)
 
 def main(path):
     returnData = []
